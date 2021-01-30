@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:loja_virtual/tiles/drawer_tile.dart';
 
 class CustomDrawer extends StatelessWidget {
+  final PageController _pageController;
+
+  CustomDrawer(this._pageController);
+
   @override
   Widget build(BuildContext context) {
     Widget _buildDrawerBack() => Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
-                  colors: [Color.fromARGB(255, 203, 236, 241), Colors.white],
+                  colors: [Color.fromARGB(255, 210, 210, 255), Colors.white],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter)),
         );
@@ -29,27 +33,27 @@ class CustomDrawer extends StatelessWidget {
                       top: 8,
                       left: 0,
                       child: Text(
-                        'Loja\nVirtual',
+                        'Loja Virtual',
                         style: TextStyle(
                             fontSize: 34, fontWeight: FontWeight.bold),
                       ),
                     ),
                     Positioned(
-                      top: 0,
+                      bottom: 0,
                       left: 0,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Olá, ',
+                            'Seja Bem-Vindo(a)!',
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                           GestureDetector(
                             child: Text(
-                              'Entre ou cadastre-se >',
+                              'ENTRE OU CADASTRE-SE',
                               style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context).primaryColorDark,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -62,10 +66,11 @@ class CustomDrawer extends StatelessWidget {
                 ),
               ),
               Divider(),
-              DrawerTale(Icons.home, 'Início'),
-              DrawerTale(Icons.list, 'Produtos'),
-              DrawerTale(Icons.location_on, 'Lojas'),
-              DrawerTale(Icons.playlist_add_check, 'Meus pedidos')
+              DrawerTale(Icons.home, 'Início', _pageController, 0),
+              DrawerTale(Icons.list, 'Produtos', _pageController, 1),
+              DrawerTale(Icons.location_on, 'Lojas', _pageController, 2),
+              DrawerTale(
+                  Icons.playlist_add_check, 'Meus pedidos', _pageController, 3)
             ],
           )
         ],
