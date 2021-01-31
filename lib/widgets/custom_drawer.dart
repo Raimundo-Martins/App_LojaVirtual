@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:loja_virtual/models/user_model.dart';
 import 'package:loja_virtual/screens/login_screen.dart';
 import 'package:loja_virtual/tiles/drawer_tile.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class CustomDrawer extends StatelessWidget {
   final PageController _pageController;
@@ -11,12 +13,12 @@ class CustomDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget _buildDrawerBack() => Container(
           decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Color.fromARGB(255, 210, 210, 255), Colors.white],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter)),
+            gradient: LinearGradient(
+                colors: [Color.fromARGB(255, 210, 210, 255), Colors.white],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter),
+          ),
         );
-
     return Drawer(
       child: Stack(
         children: [
@@ -42,28 +44,42 @@ class CustomDrawer extends StatelessWidget {
                     Positioned(
                       bottom: 0,
                       left: 0,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Seja Bem-Vindo(a)!',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          GestureDetector(
-                            child: Text(
-                              'ENTRE OU CADASTRE-SE',
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColorDark,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => LoginScreen()));
-                            },
-                          ),
-                        ],
+                      child: ScopedModelDescendant<UserModel>(
+                        builder: (context, child, model) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                !model.isLoggedIn()
+                                    ? "Seja Bem-Vindo(a)!"
+                                    : 'Olá, ' + model.userData["nome"],
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              GestureDetector(
+                                child: Text(
+                                  !model.isLoggedIn()
+                                      ? 'ENTRE OU CADASTRE-SE'
+                                      : 'SAIR',
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColorDark,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                onTap: () {
+                                  if (!model.isLoggedIn())
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => LoginScreen(),
+                                      ),
+                                    );
+                                  else
+                                    model.signOut();
+                                },
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     )
                   ],

@@ -3,12 +3,22 @@ import 'package:loja_virtual/models/user_model.dart';
 import 'package:loja_virtual/screens/signup_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final _emailController = TextEditingController();
+  final _senhaController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Login'),
         centerTitle: true,
@@ -38,9 +48,11 @@ class LoginScreen extends StatelessWidget {
               padding: EdgeInsets.all(16),
               children: [
                 TextFormField(
+                  controller: _emailController,
                   validator: (text) {
                     if (text.isEmpty || !text.contains('@'))
                       return 'E-mail inválido!';
+                    return null;
                   },
                   decoration: InputDecoration(hintText: 'E-mail'),
                   keyboardType: TextInputType.emailAddress,
@@ -49,9 +61,11 @@ class LoginScreen extends StatelessWidget {
                   height: 16,
                 ),
                 TextFormField(
+                  controller: _senhaController,
                   validator: (text) {
                     if (text.isEmpty || text.length < 6)
                       return 'Senha inválida!';
+                    return null;
                   },
                   decoration: InputDecoration(hintText: 'Senha'),
                   obscureText: true,
@@ -78,7 +92,11 @@ class LoginScreen extends StatelessWidget {
                   child: RaisedButton(
                     onPressed: () {
                       if (_formKey.currentState.validate()) {}
-                      model.signIn();
+                      model.signIn(
+                          email: _emailController.text,
+                          senha: _senhaController.text,
+                          onSuccess: _onSuccess,
+                          onFail: _onFail);
                     },
                     child: Text(
                       'ENTRAR',
@@ -92,6 +110,23 @@ class LoginScreen extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+
+  void _onSuccess() {
+    Navigator.of(context).pop();
+  }
+
+  void _onFail() {
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text(
+          'Falha ao entrar!',
+          textAlign: TextAlign.center,
+        ),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 2),
       ),
     );
   }
