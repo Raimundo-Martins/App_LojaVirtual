@@ -4,9 +4,9 @@ import 'package:loja_virtual/datas/product_data.dart';
 import 'package:loja_virtual/tiles/product_tile.dart';
 
 class CategoryScreen extends StatelessWidget {
-  final DocumentSnapshot snapshot;
+  final DocumentSnapshot documentSnapshot;
 
-  CategoryScreen(this.snapshot);
+  CategoryScreen(this.documentSnapshot);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class CategoryScreen extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(snapshot.data['title']),
+          title: Text(documentSnapshot.data['title']),
           centerTitle: true,
           bottom: TabBar(
             indicatorColor: Colors.white,
@@ -31,7 +31,7 @@ class CategoryScreen extends StatelessWidget {
         body: FutureBuilder<QuerySnapshot>(
           future: Firestore.instance
               .collection('products')
-              .document(snapshot.documentID)
+              .document(documentSnapshot.documentID)
               .collection('items')
               .getDocuments(),
           builder: (context, snapshot) {
@@ -52,18 +52,24 @@ class CategoryScreen extends StatelessWidget {
                       childAspectRatio: 0.65,
                     ),
                     itemCount: snapshot.data.documents.length,
-                    itemBuilder: (context, index) => ProductTile(
-                        'grid',
-                        ProductData.fromDocument(
-                            snapshot.data.documents[index])),
+                    itemBuilder: (context, index) {
+                      ProductData productData = ProductData.fromDocument(
+                        snapshot.data.documents[index],
+                      );
+                      productData.category = this.documentSnapshot.documentID;
+                      return ProductTile('grid', productData);
+                    },
                   ),
                   ListView.builder(
                     padding: EdgeInsets.all(4),
                     itemCount: snapshot.data.documents.length,
-                    itemBuilder: (context, index) => ProductTile(
-                        'list',
-                        ProductData.fromDocument(
-                            snapshot.data.documents[index])),
+                    itemBuilder: (context, index) {
+                      ProductData productData = ProductData.fromDocument(
+                        snapshot.data.documents[index],
+                      );
+                      productData.category = this.documentSnapshot.documentID;
+                      return ProductTile('list', productData);
+                    },
                   )
                 ],
               );
