@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:loja_virtual/datas/product_data.dart';
 
 class CartProduct {
-  String id;
+  String idCard;
   String category;
   String idProduct;
   int quantity;
@@ -13,7 +13,7 @@ class CartProduct {
   CartProduct();
 
   CartProduct.formDocument(DocumentSnapshot snapshot) {
-    id = snapshot.documentID;
+    idCard = snapshot.documentID;
     category = snapshot.data['category'];
     idProduct = snapshot.data['idProduct'];
     quantity = snapshot.data['quantity'];

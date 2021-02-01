@@ -9,10 +9,30 @@ class CartModel extends Model {
 
   List<CartProduct> listProducts = [];
 
-  CartModel(this.user);
+  bool isLoading = false;
+  String couponCode;
+  int discountPercentage = 0;
+
+  CartModel(this.user) {
+    if (user.isLoggedIn()) _loadCartItems();
+  }
 
   static CartModel of(BuildContext context) =>
       ScopedModel.of<CartModel>(context);
+
+  void _loadCartItems() async {
+    QuerySnapshot querySnapshot = await Firestore.instance
+        .collection('users')
+        .document(user.firebaseUser.uid)
+        .collection('card')
+        .getDocuments();
+
+    listProducts = querySnapshot.documents
+        .map((doc) => CartProduct.formDocument(doc))
+        .toList();
+
+    notifyListeners();
+  }
 
   void addCartItem(CartProduct cartProduct) {
     listProducts.add(cartProduct);
@@ -22,7 +42,7 @@ class CartModel extends Model {
         .document(user.firebaseUser.uid)
         .collection('cart')
         .add(cartProduct.toMap())
-        .then((doc) => {cartProduct.id = doc.documentID});
+        .then((doc) => {cartProduct.idCard = doc.documentID});
 
     notifyListeners();
   }
@@ -32,11 +52,42 @@ class CartModel extends Model {
         .collection('users')
         .document(user.firebaseUser.uid)
         .collection('cart')
-        .document(cartProduct.id)
+        .document(cartProduct.idCard)
         .delete();
 
     listProducts.remove(cartProduct);
 
     notifyListeners();
+  }
+
+  void decrementProduct(CartProduct cartProduct) {
+    cartProduct.quantity--;
+
+    Firestore.instance
+        .collection('users')
+        .document(user.firebaseUser.uid)
+        .collection('card')
+        .document(cartProduct.idCard)
+        .updateData(cartProduct.toMap());
+
+    notifyListeners();
+  }
+
+  void incrementProduct(CartProduct cartProduct) {
+    cartProduct.quantity++;
+
+    Firestore.instance
+        .collection('users')
+        .document(user.firebaseUser.uid)
+        .collection('card')
+        .document(cartProduct.idCard)
+        .updateData(cartProduct.toMap());
+
+    notifyListeners();
+  }
+
+  void setCoupon(String couponCode, int discountPercentage) {
+    this.couponCode = couponCode;
+    this.discountPercentage = discountPercentage;
   }
 }
