@@ -73,6 +73,7 @@ class UserModel extends Model {
   }
 
   void signOut() async {
+    // ignore: await_only_futures
     await _firebaseAuth.signOut;
 
     userData = Map();

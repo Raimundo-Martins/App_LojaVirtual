@@ -42,96 +42,98 @@ class _LoginScreenState extends State<LoginScreen> {
             return Center(
               child: CircularProgressIndicator(),
             );
-          return Form(
-            key: _formKey,
-            child: ListView(
-              padding: EdgeInsets.all(16),
-              children: [
-                TextFormField(
-                  controller: _emailController,
-                  validator: (text) {
-                    if (text.isEmpty || !text.contains('@'))
-                      return 'E-mail inválido!';
-                    return null;
-                  },
-                  decoration: InputDecoration(hintText: 'E-mail'),
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                TextFormField(
-                  controller: _senhaController,
-                  validator: (text) {
-                    if (text.isEmpty || text.length < 6)
-                      return 'Senha inválida!';
-                    return null;
-                  },
-                  decoration: InputDecoration(hintText: 'Senha'),
-                  obscureText: true,
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: FlatButton(
-                    onPressed: () {
-                      if (_emailController.text.isEmpty) {
-                        _scaffoldKey.currentState.showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Insira seu e-mail para a recuperação!',
-                              textAlign: TextAlign.center,
-                            ),
-                            backgroundColor: Colors.red,
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                      } else {
-                        model.recoverPass(_emailController.text);
-                        _scaffoldKey.currentState.showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Confira seu e-mail!',
-                              textAlign: TextAlign.center,
-                            ),
-                            backgroundColor: Theme.of(context).primaryColor,
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                      }
+          return Center(
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                padding: EdgeInsets.all(16),
+                children: [
+                  TextFormField(
+                    controller: _emailController,
+                    validator: (text) {
+                      if (text.isEmpty || !text.contains('@'))
+                        return 'E-mail inválido!';
+                      return null;
                     },
-                    child: Text(
-                      'Esqueci minha senha',
-                      textAlign: TextAlign.right,
-                    ),
-                    padding: EdgeInsets.zero,
+                    decoration: InputDecoration(hintText: 'E-mail'),
+                    keyboardType: TextInputType.emailAddress,
                   ),
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                SizedBox(
-                  height: 44,
-                  child: RaisedButton(
-                    onPressed: () {
-                      if (_formKey.currentState.validate()) {}
-                      model.signIn(
-                          email: _emailController.text,
-                          senha: _senhaController.text,
-                          onSuccess: _onSuccess,
-                          onFail: _onFail);
+                  SizedBox(
+                    height: 16,
+                  ),
+                  TextFormField(
+                    controller: _senhaController,
+                    validator: (text) {
+                      if (text.isEmpty || text.length < 6)
+                        return 'Senha inválida!';
+                      return null;
                     },
-                    child: Text(
-                      'ENTRAR',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    textColor: Colors.white,
-                    color: Theme.of(context).primaryColor,
+                    decoration: InputDecoration(hintText: 'Senha'),
+                    obscureText: true,
                   ),
-                )
-              ],
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: FlatButton(
+                      onPressed: () {
+                        if (_emailController.text.isEmpty) {
+                          _scaffoldKey.currentState.showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Insira seu e-mail para a recuperação!',
+                                textAlign: TextAlign.center,
+                              ),
+                              backgroundColor: Colors.red,
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        } else {
+                          model.recoverPass(_emailController.text);
+                          _scaffoldKey.currentState.showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Confira seu e-mail!',
+                                textAlign: TextAlign.center,
+                              ),
+                              backgroundColor: Theme.of(context).primaryColor,
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      },
+                      child: Text(
+                        'Esqueci minha senha',
+                        textAlign: TextAlign.right,
+                      ),
+                      padding: EdgeInsets.zero,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  SizedBox(
+                    height: 44,
+                    child: RaisedButton(
+                      onPressed: () {
+                        if (_formKey.currentState.validate()) {}
+                        model.signIn(
+                            email: _emailController.text,
+                            senha: _senhaController.text,
+                            onSuccess: _onSuccess,
+                            onFail: _onFail);
+                      },
+                      child: Text(
+                        'ENTRAR',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      textColor: Colors.white,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  )
+                ],
+              ),
             ),
           );
         },

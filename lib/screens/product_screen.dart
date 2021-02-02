@@ -43,7 +43,7 @@ class _ProductScreenState extends State<ProductScreen> {
               dotBgColor: Colors.transparent,
               dotColor: primaryColor,
               autoplay: true,
-              autoplayDuration: Duration(seconds: 3),
+              autoplayDuration: Duration(seconds: 5),
             ),
           ),
           Padding(
@@ -71,13 +71,13 @@ class _ProductScreenState extends State<ProductScreen> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
                 SizedBox(
-                  height: 34,
+                  height: 45,
                   child: GridView(
                     padding: EdgeInsets.symmetric(vertical: 4),
                     scrollDirection: Axis.horizontal,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 1,
-                        mainAxisSpacing: 8,
+                        mainAxisSpacing: 10,
                         childAspectRatio: 0.5),
                     children: productData.sizes
                         .map(
@@ -111,7 +111,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   height: 16,
                 ),
                 SizedBox(
-                  height: 44,
+                  height: 50,
                   child: RaisedButton(
                     onPressed: size != null
                         ? () {
@@ -121,6 +121,7 @@ class _ProductScreenState extends State<ProductScreen> {
                               cartProduct.idProduct = productData.id;
                               cartProduct.size = size;
                               cartProduct.quantity = 1;
+                              cartProduct.productData = productData;
 
                               CartModel.of(context).addCartItem(cartProduct);
 

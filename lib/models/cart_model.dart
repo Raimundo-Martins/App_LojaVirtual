@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:loja_virtual/datas/cart_product.dart';
 import 'package:loja_virtual/models/user_model.dart';
-import 'package:loja_virtual/widgets/cart_price.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class CartModel extends Model {
@@ -114,8 +113,8 @@ class CartModel extends Model {
     notifyListeners();
   }
 
-  void finishOrder() async {
-    if (listProducts.length == 0) return;
+  Future<String> finishOrder() async {
+    if (listProducts.length == 0) return null;
 
     isLoading = true;
     notifyListeners();
@@ -124,7 +123,7 @@ class CartModel extends Model {
     double discountPrice = getDiscount();
     double shipPrice = getShipPrice();
 
-    DocumentReference documentReference =
+    DocumentReference refOrders =
         await Firestore.instance.collection('orders').add({
       'idCliente': user.firebaseUser.uid,
       'products':
@@ -140,13 +139,26 @@ class CartModel extends Model {
         .collection('users')
         .document(user.firebaseUser.uid)
         .collection('orders')
-        .document(documentReference.documentID)
-        .setData({'orderId': documentReference.documentID});
+        .document(refOrders.documentID)
+        .setData({'orderId': refOrders.documentID});
 
     QuerySnapshot querySnapshot = await Firestore.instance
         .collection('users')
         .document(user.firebaseUser.uid)
         .collection('cart')
         .getDocuments();
+
+    for (DocumentSnapshot snapshot in querySnapshot.documents) {
+      snapshot.reference.delete();
+    }
+
+    listProducts.clear();
+    couponCode = null;
+    discountPercentage = 0;
+
+    isLoading = false;
+    notifyListeners();
+
+    return refOrders.documentID;
   }
 }
