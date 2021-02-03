@@ -79,11 +79,14 @@ class CartPrice extends StatelessWidget {
                 SizedBox(
                   height: 12,
                 ),
-                RaisedButton(
-                  child: Text('Finalizar Pedido'),
-                  textColor: Colors.white,
-                  color: Theme.of(context).primaryColor,
-                  onPressed: buy,
+                SizedBox(
+                  height: 40,
+                  child: RaisedButton(
+                    child: Text('Finalizar Pedido'),
+                    textColor: Colors.white,
+                    color: Theme.of(context).primaryColor,
+                    onPressed: buy,
+                  ),
                 )
               ],
             );

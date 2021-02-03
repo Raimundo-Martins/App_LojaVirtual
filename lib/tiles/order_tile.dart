@@ -94,13 +94,13 @@ class OrderTile extends StatelessWidget {
     Widget child;
 
     if (status < thisStatus) {
-      backColor = Colors.grey[500];
+      backColor = Colors.grey;
       child = Text(
         title,
         style: TextStyle(color: Colors.white),
       );
     } else if (status == thisStatus) {
-      backColor = Colors.grey[500];
+      backColor = Colors.blue;
       child = Stack(
         alignment: Alignment.center,
         children: [

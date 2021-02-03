@@ -14,7 +14,9 @@ class CartModel extends Model {
   int discountPercentage = 0;
 
   CartModel(this.user) {
-    if (user.isLoggedIn()) _loadCartItems();
+    if (user.isLoggedIn()) {
+      _loadCartItems();
+    }
   }
 
   static CartModel of(BuildContext context) =>
@@ -24,7 +26,7 @@ class CartModel extends Model {
     QuerySnapshot querySnapshot = await Firestore.instance
         .collection('users')
         .document(user.firebaseUser.uid)
-        .collection('card')
+        .collection('cart')
         .getDocuments();
 
     listProducts = querySnapshot.documents
@@ -66,7 +68,7 @@ class CartModel extends Model {
     Firestore.instance
         .collection('users')
         .document(user.firebaseUser.uid)
-        .collection('card')
+        .collection('cart')
         .document(cartProduct.idCard)
         .updateData(cartProduct.toMap());
 
@@ -79,7 +81,7 @@ class CartModel extends Model {
     Firestore.instance
         .collection('users')
         .document(user.firebaseUser.uid)
-        .collection('card')
+        .collection('cart')
         .document(cartProduct.idCard)
         .updateData(cartProduct.toMap());
 

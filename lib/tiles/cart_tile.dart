@@ -19,7 +19,7 @@ class CartTile extends StatelessWidget {
         children: [
           Container(
             padding: EdgeInsets.all(8),
-            height: 120,
+            height: 100,
             child: Image.network(
               cartProduct.productData.images[0],
               fit: BoxFit.cover,
@@ -53,7 +53,7 @@ class CartTile extends StatelessWidget {
                       IconButton(
                           icon: Icon(Icons.remove),
                           color: Theme.of(context).primaryColor,
-                          onPressed: cartProduct.quantity > 0
+                          onPressed: cartProduct.quantity > 1
                               ? () {
                                   CartModel.of(context)
                                       .decrementProduct(cartProduct);
@@ -67,11 +67,15 @@ class CartTile extends StatelessWidget {
                             CartModel.of(context).incrementProduct(cartProduct);
                           }),
                       FlatButton(
-                        child: Text('Remover'),
-                        color: Colors.grey[500],
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                        ),
+                        color: Colors.red,
                         onPressed: () {
                           CartModel.of(context).removeCartItem(cartProduct);
                         },
+                        minWidth: 5,
                       )
                     ],
                   )
